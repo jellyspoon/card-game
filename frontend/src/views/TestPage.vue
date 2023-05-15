@@ -16,10 +16,19 @@ const playerCard = new PlayerCard({
 })
 
 const rows = ref(3)
-const columns = ref(3)
+const columns = ref(4)
 const numCards = computed(() => rows.value * columns.value)
 
 const cards = ref<Card[]>()
+
+const updateGrid = (grid: (Card | undefined)[]) => {
+  for (let i = 0; i < grid.length; i++) {
+    if (grid[i] === undefined) {
+      grid[i] = new Card()
+    }
+  }
+  cards.value = grid as Card[]
+}
 
 onMounted(() => {
   cards.value = []
@@ -41,6 +50,7 @@ onMounted(() => {
     :rows="rows"
     :columns="columns"
     :cards="cards"
+    @update-grid="updateGrid"
   />
 </template>
 

@@ -2,13 +2,18 @@
 import { computed } from 'vue'
 import Card from '@/classes/Card'
 import GridCard from './GridCard.vue'
-import { areAdjacentCards } from '@/utils/gridTools'
+import { areAdjacentCards, shiftGrid } from '@/utils/gridTools'
 import type PlayerCard from '@/classes/PlayerCard'
 
 const props = defineProps<{
   columns: number
   rows: number
-  cards: (Card | PlayerCard)[]
+  cards:(Card | PlayerCard)[]
+}>()
+
+// eslint-disable-next-line func-call-spacing
+const emits = defineEmits<{
+  (e: 'update-grid', cards: Card[]): void
 }>()
 
 const playerCardIndex = computed(() => props.cards.findIndex(c => c.type === 'Player'))
@@ -30,6 +35,7 @@ const clickAction = (index: number) => {
     }
   } else {
     playerCard.value.damage(returnDamage)
+    emits('update-grid', shiftGrid(playerCardIndex.value, index, props.rows, props.columns, props.cards))
   }
 }
 </script>
